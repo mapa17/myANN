@@ -45,26 +45,18 @@ class myANN(object):
         dWs = [None]*len(self.W)
         # Iterate from back to front
         for l in list(range(len(self.W)))[::-1]:
-        #for W, output in zip(self.W[::-1], layer_results[0:-1][::-1]):
             W = self.W[l]
             output = layer_results[l]
+
             # Calculate the weight update
-            #S = 1.0 / (1.0 + np.exp(-np.dot(output, W.T)))
             S = 1.0 / (1.0 + np.exp(-np.dot(W, output.T)))
-            #S = 1.0 / (1.0 + np.exp(-np.dot(output, W)))
-            #dW = np.dot(output, -error * S*(1-S))
-            #dW = np.dot(output, error * S*(1-S))
+
             # Update weights based on the scaled prediction error of this layer
             dW = np.dot(error * S*(1.0-S), output)
             W += self.learning_rate * dW
             dWs[l] = dW
 
-            # Update the weights of the model
-            self.W[l] = W
-
             # Propagate the error making it the output of the previous layer
-            #error = np.dot(error.T, W)
-            #error = np.dot(W, error)
             error = np.dot(W.T, error)
         
         return dWs
